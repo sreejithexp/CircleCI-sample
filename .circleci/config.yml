@@ -29,20 +29,10 @@ FASTLANE_LANE: dev
 
 <<: *defaults
 
-deploy-danger:
-environment:
-FASTLANE_LANE: int
-#DANGER_GITHUB_API_TOKEN: f9854a821c9dba241fdf5fd679764d416bb6e1a7
-<<: *defaults
-
 workflows:
 version: 2
 testflight-dev:
 jobs:
-- deploy-danger:
-filters:
-tags:
-only: /.*/
 - deploy-dev:
 filters:
 tags:
