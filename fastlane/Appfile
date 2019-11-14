@@ -1,0 +1,11 @@
+# app_identifier("[["com.CircleCISample.dev"]]") # The bundle identifier of your app
+# apple_id("[[sreejith.s@experionglobal.com]]") # Your Apple email address
+
+
+team_id "6KLQA7GG45" # Developer Portal Team ID Experion Technologies
+
+itc_team_name "Experion Technologies India Pvt. Limited"
+itc_team_id "295955"
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

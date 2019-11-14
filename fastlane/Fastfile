@@ -1,0 +1,110 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+fastlane_version "2.113.0"
+
+default_platform(:ios)
+xcversion(version: "10.1.0")
+
+
+platform :ios do
+before_all do
+    ENV["APP_ID"] = "com.circleCIsample.test"
+  end
+
+desc "Runs all the tests"
+  lane :test do
+    scan
+  end
+
+desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure the profile is up to date"
+  lane :beta do
+    # match(type: "appstore") # more information: https://codesigning.guide
+    gym(scheme: "CircleCI-Sample") # Build your app - more options available
+    pilot
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here (run `fastlane actions`)
+  end
+
+ desc "Deploy a new version to the App Store"
+  lane :appstore do
+    # match(type: "appstore")
+    # snapshot
+    gym(scheme: "CircleCI-Sample") # Build your app - more options available
+    deliver(force: true)
+    # frameit
+  end
+
+desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure the profile is up to date"
+  lane :qc do
+    # build_num = latest_testflight_build_number(app_identifier: ENV["APP_ID"]) + 1
+    # increment_build_number({
+    #   build_number: build_num
+    # })
+    #sh("./scripts/remove-fl-keychain.sh")
+    setup_circle_ci
+    match(app_identifier: ENV["APP_ID"], type: "appstore", readonly: true)
+    cocoapods
+    gym(workspace: "CircleCI-Sample.xcworkspace",
+        scheme: "BusApp",
+        configuration: "Release") # Build your app - more options available
+    pilot(app_identifier: ENV["APP_ID"])
+    #upload_symbols_to_crashlytics(dsym_path: "./BusApp.app.dSYM.zip")
+  end
+
+desc "Read only Sync AppStore and Development Certificates"
+  lane :certs do
+
+    match_app_identifiers = ENV["APP_ID"]
+    # more information: https://codesigning.guide
+    match(app_identifier: match_app_identifiers, type: "appstore", readonly: true)
+    match(app_identifier: match_app_identifiers, type: "development", readonly: true)
+
+  end
+
+  desc "Sync AppStore and Development Certificates"
+  lane :regen_certs do
+
+    match_app_identifiers = ENV["APP_ID"]
+    # more information: https://codesigning.guide
+    match(app_identifier: match_app_identifiers, type: "appstore")
+    match(app_identifier: match_app_identifiers, type: "development")
+
+  end
+
+desc "Add Devices"
+  lane :add_devices do
+    register_devices(
+      devices_file: "./devices.txt"
+    )
+
+    # match(type: "appstore", force: true, readonly: false)
+    match(type: "development", force: true, readonly: false)
+    # slack(
+    #  message: "Added new devices and updated provision files.
+    # @channel run `bundle exec fastlane certs` to sync latest certs"
+    #)
+  end
+
+# 1
+  desc "Create app on Apple Developer and App Store Connect sites"
+# 2
+  lane :create_app do
+# 3
+​    produce
+  end
+end

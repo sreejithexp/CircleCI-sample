@@ -1,0 +1,58 @@
+version: 2
+
+defaults: &defaults
+macos:
+xcode: "10.1.0"
+working_directory: "~/repo"
+shell: /bin/bash --login -o pipefail
+
+steps:
+- checkout
+- run:
+name: "Setting Ruby Version" # Default Ruby Version has SSL issues with RubyGems.org
+command: echo "ruby-2.4" > ~/.ruby-version
+- run: bundle install
+- run:
+name: Fetch CocoaPods Specs
+command: curl -sS https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash
+- run:
+name: Setting up danger
+command: bundle exec danger --fail-on-errors=true
+- run:
+name: Fastlane
+command: bundle exec fastlane $FASTLANE_LANE
+no_output_timeout: 60m
+jobs:
+deploy-dev:
+environment:
+FASTLANE_LANE: int
+
+<<: *defaults
+
+deploy-dev:
+environment:
+FASTLANE_LANE: dev
+
+<<: *defaults
+
+deploy-danger:
+environment:
+FASTLANE_LANE: int
+#DANGER_GITHUB_API_TOKEN: f9854a821c9dba241fdf5fd679764d416bb6e1a7
+<<: *defaults
+
+workflows:
+version: 2
+testflight-dev:
+jobs:
+- deploy-danger:
+filters:
+tags:
+only: /.*/
+- deploy-dev:
+filters:
+tags:
+only: /release\/int-.*/
+branches:
+ignore: /.*/
+
