@@ -213,8 +213,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cocoapods (~> 1.5, >= 1.5.3)
-  fastlane
+  cocoapods
+  dotenv (~> 2.6)
+  fastlane (~> 2.112)
   xcode-install
 
 BUNDLED WITH
