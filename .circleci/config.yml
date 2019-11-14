@@ -25,12 +25,6 @@ no_output_timeout: 60m
 jobs:
 deploy-dev:
 environment:
-FASTLANE_LANE: int
-
-<<: *defaults
-
-deploy-dev:
-environment:
 FASTLANE_LANE: dev
 
 <<: *defaults
