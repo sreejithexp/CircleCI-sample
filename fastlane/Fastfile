@@ -59,7 +59,7 @@ desc "Submit a new Beta Build to Apple TestFlight"
     setup_circle_ci
     match(app_identifier: ENV["APP_ID"], type: "development", readonly: true)
     cocoapods
-    gym(workspace: "CircleCI-Sample.xcodeproj",
+    gym(workspace: "CircleCI-Sample.xcworkspace",
         scheme: "CircleCI-Sample",
         configuration: "Debug") # Build your app - more options available
     pilot(app_identifier: ENV["APP_ID"])
