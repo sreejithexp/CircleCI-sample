@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   macos:
     xcode: "11.1"
-  working_directory: "~/repo"
+  working_directory: "~/CircleCI-sample"
   #shell: /bin/bash --login -o pipefail
 
   steps:
@@ -15,9 +15,9 @@ defaults: &defaults
     - run:
           name: Fetch CocoaPods Specs
           command: curl -sS https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash
-    - run:
-          name: Setting up danger
-          command: bundle exec danger --fail-on-errors=true
+#    - run:
+#          name: Setting up danger
+#          command: bundle exec danger --fail-on-errors=true
     - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
