@@ -1,6 +1,8 @@
 version: 2
 
 defaults: &defaults
+jobs:
+ build:
   macos:
     xcode: "11.1"
     working_directory: "~/CircleCI-sample"
