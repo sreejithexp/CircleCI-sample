@@ -1,6 +1,6 @@
 version: 2
 
-defaults: &defaults
+#defaults: &defaults
 jobs:
  build:
   macos:
@@ -30,7 +30,7 @@ jobs:
       environment:
          FASTLANE_LANE: dev
 
-  <<: *defaults
+#  <<: *defaults
 
 workflows:
   version: 2
