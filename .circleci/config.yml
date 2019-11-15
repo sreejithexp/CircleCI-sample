@@ -1,43 +1,43 @@
 version: 2
 
 defaults: &defaults
-macos:
-xcode: "11.1"
-working_directory: "~/repo"
-shell: /bin/bash --login -o pipefail
+  macos:
+    xcode: "11.1"
+  working_directory: "~/repo"
+  shell: /bin/bash --login -o pipefail
 
-steps:
-- checkout
-- run:
-name: "Setting Ruby Version" # Default Ruby Version has SSL issues with RubyGems.org
-command: echo "ruby-2.4" > ~/.ruby-version
-- run: bundle install
-- run:
-name: Fetch CocoaPods Specs
-command: curl -sS https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash
-- run:
-name: Setting up danger
-command: bundle exec danger --fail-on-errors=true
-- run:
-name: Fastlane
-command: bundle exec fastlane $FASTLANE_LANE
-no_output_timeout: 60m
+  steps:
+    - checkout
+    - run:
+          name: "Setting Ruby Version" # Default Ruby Version has SSL issues with RubyGems.org
+          command: echo "ruby-2.4" > ~/.ruby-version
+    - run: bundle install
+    - run:
+          name: Fetch CocoaPods Specs
+          command: curl -sS https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash
+    - run:
+          name: Setting up danger
+          command: bundle exec danger --fail-on-errors=true
+    - run:
+          name: Fastlane
+          command: bundle exec fastlane $FASTLANE_LANE
+          no_output_timeout: 60m
 
-jobs:
-deploy-dev:
-environment:
-FASTLANE_LANE: dev
+  jobs:
+    deploy-dev:
+      environment:
+         FASTLANE_LANE: dev
 
-<<: *defaults
+  <<: *defaults
 
 workflows:
-version: 2
-testflight-dev:
-jobs:
-- deploy-dev:
-filters:
-tags:
-only: /release\/int-.*/
-branches:
-ignore: /.*/
+  version: 2
+  testflight-dev:
+    jobs:
+      - deploy-dev:
+          filters:
+            tags:
+              only: /release\/int-.*/
+            branches:
+              ignore: /.*/
 
