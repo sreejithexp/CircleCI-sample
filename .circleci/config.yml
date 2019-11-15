@@ -37,7 +37,7 @@ workflows:
       - deploy-dev:
           filters:
             tags:
-              only: /release\/int-.*/
+              only: /release\/dev-.*/
             branches:
               ignore: /.*/
 
