@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+			print("its time to st up circle ci")
         // Do any additional setup after loading the view.
     }
 
