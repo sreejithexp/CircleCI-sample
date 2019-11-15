@@ -7,7 +7,6 @@ jobs:
     xcode: "11.1"
     working_directory: "~/CircleCI-sample"
 #    shell: /bin/bash --login -o pipefail
-  
   steps:
     - checkout
     - run:
