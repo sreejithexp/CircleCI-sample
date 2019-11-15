@@ -1,12 +1,11 @@
 version: 2
 
-#defaults: &defaults
-jobs:
- build:
+defaults: &defaults
   macos:
     xcode: "11.1"
     working_directory: "~/CircleCI-sample"
 #    shell: /bin/bash --login -o pipefail
+  
   steps:
     - checkout
     - run:
@@ -29,7 +28,7 @@ jobs:
       environment:
          FASTLANE_LANE: dev
 
-#  <<: *defaults
+  <<: *defaults
 
 workflows:
   version: 2
