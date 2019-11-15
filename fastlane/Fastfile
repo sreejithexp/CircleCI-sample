@@ -55,7 +55,7 @@ desc "Submit a new Beta Build to Apple TestFlight"
     # increment_build_number({
     #   build_number: build_num
     # })
-    #sh("./scripts/remove-fl-keychain.sh")
+    sh("./scripts/remove-fl-keychain.sh")
     setup_circle_ci
     match(app_identifier: ENV["APP_ID"], type: "appstore", readonly: true)
     cocoapods
