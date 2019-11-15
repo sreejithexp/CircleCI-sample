@@ -11,11 +11,11 @@
 #
 
 # Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+ update_fastlane
 fastlane_version "2.113.0"
 
 default_platform(:ios)
-xcversion(version: "10.2.1")
+xcversion(version: "11.1")
 
 
 platform :ios do
@@ -57,11 +57,17 @@ desc "Submit a new Beta Build to Apple TestFlight"
     # })
     #sh("./scripts/remove-fl-keychain.sh")
     setup_circle_ci
-    match(app_identifier: ENV["APP_ID"], type: "development", readonly: true)
+    match(app_identifier: ENV["APP_ID"], type: "appstore", readonly: true)
     cocoapods
     gym(workspace: "CircleCI-Sample.xcworkspace",
         scheme: "CircleCI-Sample",
-        configuration: "Debug") # Build your app - more options available
+        configuration: "Release", # Build your app - more options available
+	export_options: {
+        provisioningProfiles: { 
+          "com.circleCIsample.test" => "match AppStore com.circleCIsample.test",
+        }
+      }
+      )
     pilot(app_identifier: ENV["APP_ID"])
   end
 
@@ -70,7 +76,7 @@ desc "Read only Sync AppStore and Development Certificates"
 
     match_app_identifiers = ENV["APP_ID"]
     # more information: https://codesigning.guide
-   # match(app_identifier: match_app_identifiers, type: "appstore", readonly: true)
+    match(app_identifier: match_app_identifiers, type: "appstore", readonly: true)
     match(app_identifier: match_app_identifiers, type: "development", readonly: true)
 
   end
