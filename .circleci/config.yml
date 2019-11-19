@@ -59,10 +59,10 @@ workflows:
     jobs:
       - build-and-test:
           filters:
-            tags:
-              only: /release/dev-v0.1
+#            tags:
+#              only: /release/dev-v0.1
             branches:
-              ignore: /.*/
+             only: /release/dev-v0.1
       #- beta:
           #filters:
             #branches:
