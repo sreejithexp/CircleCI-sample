@@ -1,38 +1,71 @@
 version: 2
 jobs:
-  testflight-dev:
+  build-and-test:
     macos:
-      xcode: "11.1.0"
+      xcode: "11.1"
+    working_directory: /Users/experion/Documents/circleCI-sample
     environment:
       FL_OUTPUT_DIR: output
+      FASTLANE_LANE: test
+    shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - run:
-          name: Fetch CocoaPods Specs
-          command: |
-            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
-      - run:
-          name: Install CocoaPods
-          command: pod install --verbose
-
+      - run: bundle install
       - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
-          no_output_timeout : 60m
- 
-version: 2
-jobs:
- deploy-dev:
-    environment:
-      FASTLANE_LANE: dev
-      
+      - store_artifacts:
+          path: output
+      - store_test_results:
+          path: output/scan
+
+#  adhoc:
+#    macos:
+#      xcode: "10.2.0"
+#    working_directory: /Users/distiller/project
+#    environment:
+#      FL_OUTPUT_DIR: output
+#      FASTLANE_LANE: adhoc
+#    shell: /bin/bash --login -o pipefail
+#    steps:
+#      - checkout
+#      - run: bundle install
+#      - run:
+#          name: Fastlane
+#          command: bundle exec fastlane $FASTLANE_LANE
+#      - store_artifacts:
+#          path: output/Game.ipa
+#
+#  beta:
+#    macos:
+#      xcode: "10.2.0"
+#    working_directory: /Users/distiller/project
+#    environment:
+#      FL_OUTPUT_DIR: output
+#      FASTLANE_LANE: beta
+#    shell: /bin/bash --login -o pipefail
+#    steps:
+#      - checkout
+#      - run: bundle install
+#      - run:
+#          name: Fastlane
+#          command: bundle exec fastlane $FASTLANE_LANE
+#      - store_artifacts:
+#          path: output/Game.ipa
+
 workflows:
   version: 2
-  testflight-dev:
+  build-test-adhoc:
     jobs:
-      - deploy-dev:
-         filters:
-           tags:
-             only: /release\/dev-.*/
-           branches:
-             ignore: /.*/
+      - build-and-test
+          filters:
+            tags:
+              only: /release\/dev-.*/
+            branches:
+              ignore: /.*/
+      #- beta:
+          #filters:
+            #branches:
+              #only: master
+          #requires:
+            #- build-and-test
