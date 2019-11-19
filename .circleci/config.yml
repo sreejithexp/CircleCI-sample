@@ -62,7 +62,7 @@ workflows:
 #            tags:
 #              only: /release/dev-v0.1
             branches:
-             only: /release/dev-v0.1
+             only: master
       #- beta:
           #filters:
             #branches:
