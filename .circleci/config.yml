@@ -60,7 +60,7 @@ workflows:
       - build-and-test:
           filters:
             tags:
-              only: /release\/dev-.*/
+              only: /release/dev-v0.1
             branches:
               ignore: /.*/
       #- beta:
